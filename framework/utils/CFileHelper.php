@@ -190,17 +190,102 @@ class CFileHelper
 	 */
 	protected static function validatePath($base,$file,$isFile,$fileTypes,$exclude)
 	{
-		foreach($exclude as $e)
-		{
-			if($file===$e || strpos($base.'/'.$file,$e)===0)
-				return false;
-		}
+		if(self::fnmatchArray($exclude, $file)===true)
+			return false;		
 		if(!$isFile || empty($fileTypes))
 			return true;
 		if(($type=pathinfo($file, PATHINFO_EXTENSION))!=='')
 			return in_array($type,$fileTypes);
 		else
 			return false;
+	}
+	/**
+	 * Disable backslash escaping in fnmatch
+	 * @var int
+	 */
+	const FNM_PATHNAME = 1;
+	/**
+	 * Slash in string only matches slash in the given pattern.
+	 * @var int
+	 */
+	const FNM_NOESCAPE = 2;
+	/**
+	 * Leading period in string must be exactly matched by period in the given pattern. 
+	 * @var int
+	 */
+	const FNM_PERIOD = 4;
+	/**
+	 * Caseless match. Part of the GNU extension.
+	 * @var int
+	 */
+	const FNM_CASEFOLD = 16;	
+	/**
+	 * This method will match a string against a given pattern.
+	 * On systems where fnmatch is not supported (mainly windows before php 5.3) it will use a fallback
+	 * based on me at rowanlewis dot com's comment on php.net
+	 * @param string $pattern The shell wildcard pattern.
+	 * @param string $filename  The tested string. This function is especially useful for filenames,
+	 * but may also be used on regular strings.
+     * The average user may be used to shell patterns or at least in their simplest form to '?' and '*' wildcards 
+	 * so using fnmatch() instead of preg_match() for frontend search expression input may be way more convenient 
+	 * for non-programming users.
+	 * @param int $flags 
+	 * @return Returns TRUE if there is a match, FALSE otherwise. 
+	 * @see http://php.net/manual/en/function.fnmatch.php
+	 * @since 1.1.11  	 
+	 */
+	public static function fnmatch($pattern,$filename,$flags=0)
+	{		
+		if(function_exists('fnmatch'))
+			return fnmatch($pattern, $filename, $flags);
+		// The following fallback is based on me at rowanlewis dot com comment on http://php.net/manual/en/function.fnmatch.php
+		// at 30-Sep-2010 10:58
+		$modifiers = null;
+        $transforms = array(
+            '\*'    => '.*',
+            '\?'    => '.',
+            '\[\!'    => '[^',
+            '\['    => '[',
+            '\]'    => ']',
+            '\.'    => '\.',
+            '\\'    => '\\\\'
+        );       
+        // Forward slash in string must be in pattern:
+        if ($flags & self::FNM_PATHNAME)
+            $transforms['\*'] = '[^/]*';       
+        // Back slash should not be escaped:
+        if ($flags & self::FNM_NOESCAPE)
+            unset($transforms['\\']);
+        // Perform case insensitive match:
+        if ($flags & self::FNM_CASEFOLD)
+            $modifiers .= 'i';
+        // Period at start must be the same as pattern:
+        if ($flags & self::FNM_PERIOD)
+            if (strpos($string, '.') === 0 && strpos($pattern, '.') !== 0) return false;
+        // built pattern
+        $pattern = '#^'
+            . strtr(preg_quote($pattern, '#'), $transforms)
+            . '$#'
+            . $modifiers;       
+        return (boolean)preg_match($pattern, $string); 
+	}
+	/**
+	 * This matches an array of patterns against a filename.
+	 * See {@see CFileHelper::fnmatch} for information how matching works
+	 * @param array $patterns An array of pattern to be matched.
+	 * @param string $filename See {@see CFileHelper::fnmatch}'s parameters for information
+	 * @param int $flags See {@see CFileHelper::fnmatch}'s parameters for information
+	 * @return Returns TRUE if there is a match, FALSE otherwise.
+	 * @since 1.1.11
+	 */
+	public static function fnmatchArray($patterns,$filename,$flags=0)
+	{
+		foreach($patterns as $pattern)
+		{
+			if(self::fnmatch($pattern,$filename,$flags)===true)
+				return true;
+		}
+		return false;
 	}
 
 	/**

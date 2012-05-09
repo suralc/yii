@@ -172,7 +172,7 @@ class CAssetManager extends CApplicationComponent
 	 * assets are being constantly changed. The consequence is that the performance
 	 * is degraded, which is not a concern during development, however.
 	 * This parameter has been available since version 1.1.2.
-	 * @return string an absolute URL to the published asset
+	 * @return string an absolute URL to the published asset or false if the file matches the exclude array
 	 * @throws CException if the asset to be published does not exist.
 	 */
 	public function publish($path,$hashByName=false,$level=-1,$forceCopy=false)
@@ -183,8 +183,11 @@ class CAssetManager extends CApplicationComponent
 		{
 			if(is_file($src))
 			{
-				$dir=$this->hash($hashByName ? basename($src) : dirname($src).filemtime($src));
 				$fileName=basename($src);
+				if(CFileHelper::fnmatchArray($this->excludeFiles,$fileName)===true){
+					return false;
+				}
+				$dir=$this->hash($hashByName ? basename($src) : dirname($src).filemtime($src));
 				$dstDir=$this->getBasePath().DIRECTORY_SEPARATOR.$dir;
 				$dstFile=$dstDir.DIRECTORY_SEPARATOR.$fileName;
 
