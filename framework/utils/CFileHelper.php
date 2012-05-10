@@ -235,13 +235,13 @@ class CFileHelper
 	 * @since 1.1.11  	 
 	 */
 	public static function fnmatch($pattern,$filename,$flags=0)
-	{		
+	{
 		if(function_exists('fnmatch'))
 			return fnmatch($pattern, $filename, $flags);
 		// The following fallback is based on me at rowanlewis dot com comment on http://php.net/manual/en/function.fnmatch.php
 		// at 30-Sep-2010 10:58
 		$modifiers = null;
-        $transforms = array(
+		$transforms = array(
             '\*'    => '.*',
             '\?'    => '.',
             '\[\!'    => '[^',
@@ -271,7 +271,7 @@ class CFileHelper
 	}
 	/**
 	 * This matches an array of patterns against a filename.
-	 * See {@see CFileHelper::fnmatch} for information how matching works
+	 * See {@see CFileHelper::fnmatch} for information how matching is done
 	 * @param array $patterns An array of pattern to be matched.
 	 * @param string $filename See {@see CFileHelper::fnmatch}'s parameters for information
 	 * @param int $flags See {@see CFileHelper::fnmatch}'s parameters for information
@@ -280,10 +280,13 @@ class CFileHelper
 	 */
 	public static function fnmatchArray($patterns,$filename,$flags=0)
 	{
-		foreach($patterns as $pattern)
+		if(is_array($patterns) && !empty($patterns))
 		{
-			if(self::fnmatch($pattern,$filename,$flags)===true)
-				return true;
+			foreach($patterns as $pattern)
+			{
+				if(self::fnmatch($pattern,$filename,$flags)===true)
+					return true;
+			}
 		}
 		return false;
 	}
