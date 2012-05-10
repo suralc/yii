@@ -226,7 +226,7 @@ class CFileHelper
 	 * @param string $pattern The shell wildcard pattern.
 	 * @param string $filename  The tested string. This function is especially useful for filenames,
 	 * but may also be used on regular strings.
-     * The average user may be used to shell patterns or at least in their simplest form to '?' and '*' wildcards 
+	 * The average user may be used to shell patterns or at least in their simplest form to '?' and '*' wildcards 
 	 * so using fnmatch() instead of preg_match() for frontend search expression input may be way more convenient 
 	 * for non-programming users.
 	 * @param int $flags 
@@ -242,32 +242,32 @@ class CFileHelper
 		// at 30-Sep-2010 10:58
 		$modifiers = null;
 		$transforms = array(
-            '\*'    => '.*',
-            '\?'    => '.',
-            '\[\!'    => '[^',
-            '\['    => '[',
-            '\]'    => ']',
-            '\.'    => '\.',
-            '\\'    => '\\\\'
-        );       
-        // Forward slash in string must be in pattern:
-        if ($flags & self::FNM_PATHNAME)
-            $transforms['\*'] = '[^/]*';       
-        // Back slash should not be escaped:
-        if ($flags & self::FNM_NOESCAPE)
-            unset($transforms['\\']);
-        // Perform case insensitive match:
-        if ($flags & self::FNM_CASEFOLD)
-            $modifiers .= 'i';
-        // Period at start must be the same as pattern:
-        if ($flags & self::FNM_PERIOD)
-            if (strpos($string, '.') === 0 && strpos($pattern, '.') !== 0) return false;
-        // built pattern
+			'\*'    => '.*',
+			'\?'    => '.',
+			'\[\!'    => '[^',
+			'\['    => '[',
+			'\]'    => ']',
+			'\.'    => '\.',
+			'\\'    => '\\\\',
+		);       
+		// Forward slash in string must be in pattern:
+        if($flags & self::FNM_PATHNAME)
+			$transforms['\*'] = '[^/]*';       
+		// Back slash should not be escaped:
+        if($flags & self::FNM_NOESCAPE)
+			unset($transforms['\\']);
+		// Perform case insensitive match:
+        if($flags & self::FNM_CASEFOLD)
+			$modifiers .= 'i';
+		// Period at start must be the same as pattern:
+        if($flags & self::FNM_PERIOD)
+			if(strpos($string, '.')===0 && strpos($pattern, '.')!==0) return false;
+		// built pattern
         $pattern = '#^'
-            . strtr(preg_quote($pattern, '#'), $transforms)
-            . '$#'
-            . $modifiers;       
-        return (boolean)preg_match($pattern, $string); 
+			. strtr(preg_quote($pattern, '#'), $transforms)
+			. '$#'
+			. $modifiers;       
+		return (boolean)preg_match($pattern, $string); 
 	}
 	/**
 	 * This matches an array of patterns against a filename.
@@ -275,7 +275,8 @@ class CFileHelper
 	 * @param array $patterns An array of pattern to be matched.
 	 * @param string $filename See {@see CFileHelper::fnmatch}'s parameters for information
 	 * @param int $flags See {@see CFileHelper::fnmatch}'s parameters for information
-	 * @return Returns TRUE if there is a match, FALSE otherwise.
+	 * @return Returns TRUE if there is a match. False will be returned if there is no match or no valid patterns
+	 * were given.
 	 * @since 1.1.11
 	 */
 	public static function fnmatchArray($patterns,$filename,$flags=0)
