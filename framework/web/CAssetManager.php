@@ -184,7 +184,7 @@ class CAssetManager extends CApplicationComponent
 			if(is_file($src))
 			{
 				$fileName=basename($src);
-				if(CFileHelper::fnmatchArray($this->excludeFiles,$fileName)===true)
+				if(CFileHelper::fnmatchArray($this->excludeFiles,$fileName,CFileHelper::FNM_CASEFOLD)===true)
 					return false;
 				$dir=$this->hash($hashByName ? basename($src) : dirname($src).filemtime($src));
 				$dstDir=$this->getBasePath().DIRECTORY_SEPARATOR.$dir;
