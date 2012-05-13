@@ -224,12 +224,12 @@ class CFileHelper
 	 * On systems where fnmatch is not supported (mainly windows before php 5.3) it will use a fallback
 	 * based on me at rowanlewis dot com's comment on php.net
 	 * @param string $pattern The shell wildcard pattern.
-	 * @param string $filename  The tested string. This function is especially useful for filenames,
+	 * @param string $filename The tested string. This function is especially useful for filenames,
 	 * but may also be used on regular strings.
 	 * The average user may be used to shell patterns or at least in their simplest form to '?' and '*' wildcards 
 	 * so using fnmatch() instead of preg_match() for frontend search expression input may be way more convenient 
 	 * for non-programming users.
-	 * @param int $flags 
+	 * @param int $flags Flags
 	 * @return Returns TRUE if there is a match, FALSE otherwise. 
 	 * @see http://php.net/manual/en/function.fnmatch.php
 	 * @since 1.1.11  	 
