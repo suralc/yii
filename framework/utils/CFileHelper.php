@@ -229,7 +229,7 @@ class CFileHelper
 	 * The average user may be used to shell patterns or at least in their simplest form to '?' and '*' wildcards 
 	 * so using fnmatch() instead of preg_match() for frontend search expression input may be way more convenient 
 	 * for non-programming users.
-	 * @param int $flags Flags
+	 * @param int $flags 
 	 * @return Returns TRUE if there is a match, FALSE otherwise. 
 	 * @see http://php.net/manual/en/function.fnmatch.php
 	 * @since 1.1.11  	 

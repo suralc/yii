@@ -7,7 +7,7 @@ $nClassesTotal = 0;
 
 file_put_contents(
     dirname(__FILE__) . '\phpdoc.txt',
-    getPhpDocForDir('D:\Web\libs-dev\yii\framework') . getPhpDocStats());
+    getPhpDocForDir('D:\dev\www\librarys\yii\framework') . getPhpDocStats());
     //getPhpDocForDir('D:\Web\libs\yii\framework') . getPhpDocStats());
 //echo getPhpDocForDir('D:\Web\libs\yii\framework');
 //echo getPhpDocForDir('D:\Web\libs\yii\framework\caching');
