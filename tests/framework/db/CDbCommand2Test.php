@@ -385,4 +385,19 @@ class CDbCommand2Test extends CTestCase
 		$this->assertEquals('user2',$rows[0]['username']);
 		$this->assertEquals('pass2',$rows[0]['password']);
 	}
+	// See #1045
+	public function testEmptyArray()
+	{		
+		$command = $this->_connection->createCommand();
+		//example given in the issue
+		$conditions = '';
+		$params = array();
+		$query = $command->select('*')
+						 ->from('tbl')
+						 ->where($conditions, $params)
+						 ->order('id ASC')
+						 ->getText();
+		$this->assertEquals('select id from tbl order by id desc', $query);
+		
+	}
 }
