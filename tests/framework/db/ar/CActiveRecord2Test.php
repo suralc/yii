@@ -593,4 +593,12 @@ class CActiveRecord2Test extends CTestCase
 		Post2::model()->with('author','firstComment','comments','categories')->findAllBySql('SELECT * FROM test.posts WHERE id=100');
 		$this->assertTrue($posts===array());
 	}
+	//related to http://www.yiiframework.com/forum/index.php/topic/34260-make-massive-assignment-work-with-setters-in-cactiverecords-too/page__pid__164902#entry164902
+	public function testMassiveAssign()
+	{
+		$value='some new Value';
+		$model = new MassiveAssignWithCustomSetter;
+		$this->assertTrue($model->setAttributes(array('test'=>$value)));
+		$this->assertEquals($value,$model->test);
+	}
 }

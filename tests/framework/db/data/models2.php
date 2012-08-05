@@ -183,3 +183,12 @@ class ComplexType2 extends CActiveRecord
 		return 'yii_types';
 	}
 }
+
+class MassiveAssignWithCustomSetter extends CActiveRecord
+{
+	protected $something;
+    public function setTest($value)
+    {
+        $this->something = $value;
+    }
+}
