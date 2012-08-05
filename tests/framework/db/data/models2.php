@@ -34,6 +34,7 @@ class User2 extends CActiveRecord
 
 class Post2 extends CActiveRecord
 {
+	protected $customVar;
 	public static function model($class=__CLASS__)
 	{
 		return parent::model($class);
@@ -59,6 +60,15 @@ class Post2 extends CActiveRecord
 	public function tableName()
 	{
 		return 'test.posts';
+	}
+	// related to http://www.yiiframework.com/forum/index.php/topic/34260-make-massive-assignment-work-with-setters-in-cactiverecords-too/page__pid__164902#entry164902
+	public function setCustom($value)
+	{
+		$this->customVar=$value;
+	}
+	public function getCustom()
+	{
+		return $this->customVar;
 	}
 }
 
@@ -182,13 +192,4 @@ class ComplexType2 extends CActiveRecord
 	{
 		return 'yii_types';
 	}
-}
-
-class MassiveAssignWithCustomSetter extends CActiveRecord
-{
-	protected $something;
-    public function setTest($value)
-    {
-        $this->something = $value;
-    }
 }

@@ -597,8 +597,8 @@ class CActiveRecord2Test extends CTestCase
 	public function testMassiveAssign()
 	{
 		$value='some new Value';
-		$model = new MassiveAssignWithCustomSetter;
-		$this->assertTrue($model->setAttributes(array('test'=>$value)));
-		$this->assertEquals($value,$model->test);
+		$model = new Post2;
+		$this->assertTrue($model->setAttributes(array('custom'=>$value)));
+		$this->assertEquals($value,$model->custom);
 	}
 }
